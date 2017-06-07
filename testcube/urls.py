@@ -15,17 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from rest_framework import routers
 
+from .core import api
 from .core import views
-from .users import api as user_api
 from .users import views as user_views
 
 admin.site.site_header = 'TestCube Administration'
 admin.site.site_title = admin.site.site_header
 
-router = routers.DefaultRouter()
-router.register('users', user_api.UserViewSet)
+router = api.api_registration()
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -36,7 +34,9 @@ urlpatterns = [
     url('^signin', user_views.signin, name='signin'),
     url('^signup', user_views.signup, name='signup'),
     url('^signout', user_views.signout, name='signout'),
+    url('^reset', user_views.reset_password, name='reset_password'),
+    url('^profile/(.+)', user_views.user_profile, name='user_profile'),
 
     url(r'^$', views.home, name='home'),
-    url(r'^doc/(?P<name>.+)$', views.document, name='doc')
+    url(r'^docs/(?P<name>.+)$', views.document, name='docs')
 ]
